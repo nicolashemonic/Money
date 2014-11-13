@@ -23,6 +23,7 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="money-tests.ts" />
     <TypeScriptCompile Include="money.ts" />
   </ItemGroup>
   <ItemGroup>

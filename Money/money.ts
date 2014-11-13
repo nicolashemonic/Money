@@ -13,7 +13,10 @@
     private currency: string;
     private static culture: Culture;
 
-    public toString(shortFormat: boolean = false, amountFormat: string = '{0}', symbolFormat: string = '{0}'): string {
+    public toString(shortFormat: boolean = false, amountFormat?: string, symbolFormat?: string): string {
+        amountFormat = amountFormat ? amountFormat : '{0}'; // no string empty
+        symbolFormat = symbolFormat ? symbolFormat : '{0}'; // no nullable
+
         var decimalCount: number = Money.currencies[this.currency]
         var symbol: string;
         var format: string;
