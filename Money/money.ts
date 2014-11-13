@@ -1,6 +1,6 @@
 ﻿class Money {
 
-    constructor(amount, currency) {
+    constructor(amount: number, currency: string) {
         this.amount = amount;
         this.currency = currency;
 
@@ -14,74 +14,89 @@
     private static culture: Culture;
 
     public toString(amountFormat: string, symbolFormat: string) {
-        var symbol = this.currency == Money.culture.isoCode ? Money.culture.symbol : this.currency;
-        var decimalCount = Money.currencies[this.currency];
-        var format = this.amount >= 0 ? Money.currencyPositiveFormats[Money.culture.positiveFormat] : Money.currencyNegativeFormats[Money.culture.negativeFormat];
-        var shortFormat = amountFormat != null && amountFormat.indexOf('{0:s}') >= 0;
+        var decimalCount: number = Money.currencies[this.currency];
+        var shortFormat: boolean = amountFormat && amountFormat.indexOf('{0:s}') >= 0;
+        var symbol: string;
+        var format: string;
+        var amountStr: string[] = [];
+        var result: string[] = [];
+        var character: string;
 
-        amountFormat = amountFormat != null ? amountFormat.replace('{0:s}', '{0}') : null;
-
-        var fmt = (str, format) => {
-            return format == null ? str : format.replace('{0}', str);
+        var stringFormat = (value: string, format: string): string => {
+            return format == null ? value : format.replace('{0}', value);
         };
 
-        var result = [];
-        var amountStr = [];
+        if (this.currency == Money.culture.isoCode) {
+            symbol = Money.culture.symbol;
+        } else {
+            symbol = this.currency;
+        }
+
+        if (this.amount >= 0) {
+            format = Money.currencyPositiveFormats[Money.culture.positiveFormat];
+        } else {
+            format = Money.currencyNegativeFormats[Money.culture.negativeFormat];
+        }
+
+        if (amountFormat) {
+            amountFormat = amountFormat.replace('{0:s}', '{0}');
+        }
 
         for (var i = 0; i < format.length; i++) {
-            var c = format.charAt(i);
-            switch (c) {
+            character = format.charAt(i);
+
+            switch (character) {
                 case "$":
-                    if (amountStr.length > 0) {
-                        result.push(fmt(amountStr.join(""), amountFormat));
+                    if (amountStr.length) {
+                        result.push(stringFormat(amountStr.join(""), amountFormat));
                         amountStr = [];
                     }
-                    result.push(fmt(symbol, symbolFormat));
+                    result.push(stringFormat(symbol, symbolFormat));
                     break;
                 case "n":
                     amountStr.push(this.writeAmount(Math.abs(this.amount), decimalCount, shortFormat));
                     break;
                 case "-":
-                    amountStr.push(Money.culture.negativeSign);
+                    amountStr.push(Money.culture.negativeSign.toString());
                     break;
                 case "(":
                 case ")":
-                    amountStr.push(c);
+                    amountStr.push(character);
                     break;
                 default:
-                    if (amountStr.length != 0)
-                        amountStr.push(c);
+                    if (amountStr.length)
+                        amountStr.push(character);
                     else
-                        result.push(c);
+                        result.push(character);
                     break;
             }
         }
-        if (amountStr.length > 0) {
-            result.push(fmt(amountStr.join(""), amountFormat));
-            amountStr = [];
+
+        if (amountStr.length) {
+            result.push(stringFormat(amountStr.join(""), amountFormat));
         }
 
         return result.join("");
     }
 
-    private writeAmount(amount: number, decimalCount: number, shortFormat: boolean) {
+    private writeAmount(amount: number, decimalCount: number, shortFormat: boolean): string {
         amount = this.roundAmount(amount, decimalCount);
 
-        var value = Math.floor(amount);
-        var decimals = Math.round((amount - value) * Math.pow(10, decimalCount));
-        var result = [];
-        var zero = Money.culture.zero.charCodeAt(0);
-        var groupSizes = Money.culture.groupSizes;
-        var groupSeparator = Money.culture.groupSeparator;
-        var groupIndex = 0;
-        var groupSize = groupSizes[groupIndex];
+        var value: number = Math.floor(amount);
+        var decimals: number = Math.round((amount - value) * Math.pow(10, decimalCount));
+        var result: string[] = [];
+        var zero: number = Money.culture.zero.charCodeAt(0);
+        var groupSizes: number[] = Money.culture.groupSizes;
+        var groupSeparator: string = Money.culture.groupSeparator;
+        var groupIndex: number = 0;
+        var groupSize: number = groupSizes[groupIndex];
+        var decimal: number;
 
         if (decimals != 0 || !shortFormat) {
-
             for (var i = 0; i < decimalCount; i++) {
-                var d = decimals % 10;
-                result.unshift(String.fromCharCode(zero + d));
-                decimals -= d;
+                decimal = decimals % 10;
+                result.unshift(String.fromCharCode(zero + decimal));
+                decimals -= decimal;
                 decimals /= 10;
             }
             if (decimalCount != 0)
@@ -101,9 +116,9 @@
                         groupSize = -1; // disable group management
                 }
 
-                var d = value % 10;
-                result.unshift(String.fromCharCode(zero + d));
-                value -= d;
+                decimal = value % 10;
+                result.unshift(String.fromCharCode(zero + decimal));
+                value -= decimal;
                 if (groupSize > 0)
                     groupSize--;
 
@@ -114,17 +129,17 @@
         return result.join("");
     }
 
-    private roundAmount(amount: number, digitCount: number) {
+    private roundAmount(amount: number, digitCount: number): number {
         var precision = Math.pow(10, digitCount);
         return Math.round(amount * precision) / precision;
     }
 
-    private static valueAt(culture: string, index: number, value: any) {
+    private static valueAt(culture: any[], index: number, value: any): any {
         return culture.length > index ? culture[index] : value;
     }
 
     public static setCulture(name: string = 'en-US') {
-        var culture = Culture.cultures[name.replace('-', '')];
+        var culture: any[] = Culture.cultures[name.replace('-', '')];
 
         if (!culture) {
             culture = Culture.cultures['enUS'];
@@ -143,19 +158,19 @@
         );
     }
 
-    //#region currencyPositiveFormats
+    //#region private static currencyPositiveFormats
 
     private static currencyPositiveFormats = ["$n", "n$", "$ n", "n $"];
 
     //#endregion
 
-    //#region currencyNegativeFormats
+    //#region private static currencyNegativeFormats
 
     private static currencyNegativeFormats = ["($n)", "-$n", "$-n", "$n-", "(n$)", "-n$", "n-$", "n$-", "-n $", "-$ n", "n $-", "$ n-", "$ -n", "n- $", "($ n)", "(n $)"];
 
     //#endregion
 
-    //#region currencies
+    //#region private static currencies
 
     private static currencies = {
         'AED': 2,
@@ -326,7 +341,17 @@
 
 class Culture {
 
-    constructor(isoCode, symbol, negativeSign, positiveFormat, negativeFormat, decimalSeparator, groupSeparator, zero, groupSizes) {
+    constructor(
+        public isoCode: string,
+        public symbol: string,
+        public negativeSign: number,
+        public positiveFormat: string,
+        public negativeFormat: number,
+        public decimalSeparator: string,
+        public groupSeparator: string,
+        public zero: string,
+        public groupSizes: number[]) {
+
         this.isoCode = isoCode;
         this.symbol = symbol;
         this.positiveFormat = positiveFormat;
@@ -338,17 +363,7 @@ class Culture {
         this.groupSizes = groupSizes;
     }
 
-    public isoCode: string;
-    public symbol: string;
-    public positiveFormat: string;
-    public negativeFormat: number;
-    public negativeSign: number;
-    public decimalSeparator: string;
-    public groupSeparator: string;
-    public zero: string;
-    public groupSizes: number[];
-
-    //#region cultures
+    //#region public static cultures
 
     public static cultures = {
         'arSA': ['SAR', 'ر.س.\u200f', '-', 2, 3, '.', ',', '٠'],
