@@ -124,10 +124,10 @@
     }
 
     public static setCulture(name: string = 'en-US') {
-        var culture = Money.cultures[name.replace('-', '')];
+        var culture = Culture.cultures[name.replace('-', '')];
 
         if (!culture) {
-            culture = Money.cultures['enUS'];
+            culture = Culture.cultures['enUS'];
         }
 
         Money.culture = new Culture(
@@ -322,9 +322,35 @@
 
     //#endregion
 
+}
+
+class Culture {
+
+    constructor(isoCode, symbol, negativeSign, positiveFormat, negativeFormat, decimalSeparator, groupSeparator, zero, groupSizes) {
+        this.isoCode = isoCode;
+        this.symbol = symbol;
+        this.positiveFormat = positiveFormat;
+        this.negativeFormat = negativeFormat;
+        this.negativeSign = negativeSign;
+        this.decimalSeparator = decimalSeparator;
+        this.groupSeparator = groupSeparator;
+        this.zero = zero;
+        this.groupSizes = groupSizes;
+    }
+
+    public isoCode: string;
+    public symbol: string;
+    public positiveFormat: string;
+    public negativeFormat: number;
+    public negativeSign: number;
+    public decimalSeparator: string;
+    public groupSeparator: string;
+    public zero: string;
+    public groupSizes: number[];
+
     //#region cultures
 
-    private static cultures = {
+    public static cultures = {
         'arSA': ['SAR', 'ر.س.\u200f', '-', 2, 3, '.', ',', '٠'],
         'bgBG': ['BGL', 'лв', '-', 3, 8, ',', ' '],
         'caES': ['EUR', '\u20ac'],
@@ -539,29 +565,4 @@
 
     //#endregion
 
-}
-
-class Culture {
-
-    constructor(isoCode, symbol, negativeSign, positiveFormat, negativeFormat, decimalSeparator, groupSeparator, zero, groupSizes) {
-        this.isoCode = isoCode;
-        this.symbol = symbol;
-        this.positiveFormat = positiveFormat;
-        this.negativeFormat = negativeFormat;
-        this.negativeSign = negativeSign;
-        this.decimalSeparator = decimalSeparator;
-        this.groupSeparator = groupSeparator;
-        this.zero = zero;
-        this.groupSizes = groupSizes;
-    }
-
-    public isoCode: string;
-    public symbol: string;
-    public positiveFormat: string;
-    public negativeFormat: number;
-    public negativeSign: number;
-    public decimalSeparator: string;
-    public groupSeparator: string;
-    public zero: string;
-    public groupSizes: number[];
 }
