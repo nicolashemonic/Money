@@ -13,8 +13,7 @@
     private currency: string;
     private static culture: Culture;
 
-    public toString(amountFormat: string, symbolFormat: string) {
-        var decimalCount: number = Money.currencies[this.currency];
+    public toString(amountFormat: string, symbolFormat: string, decimalCount: number = Money.currencies[this.currency]): string {
         var shortFormat: boolean = amountFormat && amountFormat.indexOf('{0:s}') >= 0;
         var symbol: string;
         var format: string;
@@ -23,7 +22,7 @@
         var character: string;
 
         var stringFormat = (value: string, format: string): string => {
-            return format == null ? value : format.replace('{0}', value);
+            return !format ? value : format.replace('{0}', value);
         };
 
         if (this.currency == Money.culture.isoCode) {
