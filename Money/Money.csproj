@@ -19,7 +19,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="index.html" />
-    <Content Include="Scripts\money-source.js" />
+    <Content Include="money-source.js" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>

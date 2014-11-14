@@ -559,7 +559,8 @@
     var lang = document.documentElement.lang;
 
     Money.setCulture(lang);
-    this['Money'] = Money;
-    this['Money']['setCulture'] = Money.setCulture;
+    this['Source'] = {};
+    this['Source']['Money'] = Money;
+    this['Source']['Money']['setCulture'] = Money.setCulture;
 
 }).apply(this);

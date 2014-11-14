@@ -194,7 +194,8 @@ FakesAssemblies/
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -229,4 +230,5 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 Money/*.map
-Money/*.js
+Money/money.js
+Money/money-tests.js

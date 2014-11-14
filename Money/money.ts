@@ -17,7 +17,7 @@
         amountFormat = amountFormat ? amountFormat : '{0}'; // no string empty
         symbolFormat = symbolFormat ? symbolFormat : '{0}'; // no nullable
 
-        var decimalCount: number = Money.currencies[this.currency]
+        var decimalCount: number = Money.currencies[this.currency];
         var symbol: string;
         var format: string;
         var amountStr: string[] = [];
@@ -97,29 +97,34 @@
                 decimals -= decimal;
                 decimals /= 10;
             }
-            if (decimalCount != 0)
+            if (decimalCount != 0) {
                 result.unshift(Money.culture.decimalSeparator);
+            }  
         }
 
-        if (value == 0)
+        if (value == 0) {
             result.unshift(String.fromCharCode(zero));
+        }
         else {
             while (value >= 1) {
                 if (groupSize == 0) {
                     result.unshift(groupSeparator);
-                    if (groupIndex < groupSizes.length - 1)
+                    if (groupIndex < groupSizes.length - 1) {
                         groupIndex++;
+                    }
                     groupSize = groupSizes[groupIndex];
-                    if (groupSize == 0)
+                    if (groupSize == 0) {
                         groupSize = -1; // disable group management
+                    }  
                 }
 
                 decimal = value % 10;
                 result.unshift(String.fromCharCode(zero + decimal));
                 value -= decimal;
-                if (groupSize > 0)
-                    groupSize--;
 
+                if (groupSize > 0) {
+                    groupSize--;
+                }
                 value = value / 10;
             }
         }
